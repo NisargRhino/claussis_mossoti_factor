@@ -1,1 +1,1 @@
-# CM-factor.github.io
+This is a website displaying the Claussius Mossoti factor.
