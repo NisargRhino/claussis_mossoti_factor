@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Clausius Mossotti Factor</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.3.1/decimal.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    #container {
+      background-color: lightblue;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 80%;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    label {
+      color: #555;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #graph-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <h1 style="text-align: center;">Clausius Mossotti Factor</h1>
+    
+    <!-- Adding an image below the title -->
+    <div style="text-align: center;">
+      <img src="https://th.bing.com/th/id/OIP.9Bam4iHtL5xS8_KYT5Cc3AHaEK?pid=ImgDet&rs=1" alt="Image description" width="300">
+    </div>
+ 
+  <div>
+
+    <label for="epsilon_m">Epsilon m:</label>
+    <input type="text" id="epsilon_m" name="epsilon_m"><br><br>
+
+    <label for="epsilon_p">Epsilon p:</label>
+    <input type="text" id="epsilon_p" name="epsilon_p"><br><br>
+
+    <label for="sigma_m">Sigma m:</label>
+    <input type="text" id="sigma_m" name="sigma_m"><br><br>
+
+    <label for="sigma_p">Sigma p:</label>
+    <input type="text" id="sigma_p" name="sigma_p"><br><br>
+
+    <button onclick="calculate_cm()">Submit</button>
+  </div>
+  <div id="graph-container"></div>
+
+  <script>
+    function calculate_cm() {
+      let epsilon_m = new Decimal(document.getElementById("epsilon_m").value);
+      let epsilon_p = new Decimal(document.getElementById("epsilon_p").value);
+      let sigma_m = new Decimal(document.getElementById("sigma_m").value);
+      let sigma_p = new Decimal(document.getElementById("sigma_p").value);
+
+      // Define the frequency table
+      const frequency_table = [
+        new Decimal('0.000000001'), new Decimal('0.00000001'), new Decimal('0.0000001'), 
+        new Decimal('0.000001'), new Decimal('0.00001'), new Decimal('0.0001'), 
+        new Decimal('0.001'), new Decimal('0.01'), new Decimal('0.1'), 
+        new Decimal('1'), new Decimal('10'), new Decimal('100'), 
+        new Decimal('1000'), new Decimal('10000'), new Decimal('100000'), 
+        new Decimal('1000000'), new Decimal('10000000'), new Decimal('100000000'),
+        new Decimal('1000000000'), new Decimal('10000000000'), new Decimal('10000000000'), 
+        new Decimal('100000000000'), new Decimal('1000000000000'),
+        new Decimal('10000000000000'), new Decimal('5000000000000'), 
+        new Decimal('6000000000000'), new Decimal('7000000000000'), new Decimal('10000000000000'),
+        new Decimal('100000000000000'), new Decimal('1000000000000000'), 
+        new Decimal('10000000000000000'), new Decimal('100000000000000000'),
+        new Decimal('1000000000000000000')
+      ];
+
+      const x = [];
+      const y = [];
+
+      let value = 0;
+      console.log("entering for loop")
+      for (const frequency of frequency_table) {
+        console.log("frequency=", frequency);
+        const cm_factor =
+          (
+            (epsilon_p.minus(epsilon_m)).times(epsilon_p.plus(epsilon_m)).times(frequency.pow(2))
+            .minus((sigma_m.minus(sigma_p)).times(new Decimal(2).times(sigma_m).plus(sigma_p)))
+          )
+          .div(
+            (epsilon_p.plus(new Decimal(2).times(epsilon_m)).pow(2).times(frequency.pow(2)))
+            .plus(new Decimal(2).times(sigma_m).plus(sigma_p).pow(2))
+          );
+
+        console.log("(", frequency.toString(), ",", cm_factor.toString(), ")");
+
+        x.push(frequency.toString());
+        y.push(cm_factor.toString());
+        value++;
+      }
+
+      // Create a Plotly graph
+      const trace = {
+        x: x,
+        y: y,
+        mode: 'lines+markers',
+        type: 'scatter',
+        name: 'CM factor'
+      };
+
+      const layout = {
+        xaxis: {
+          type: 'log',
+          autorange: true,
+          title: 'Frequency'
+        },
+        yaxis: {
+          autorange: true,
+          title: 'CM factor'
+        },
+        title: 'Claussius Mosotti factor graph'
+      };
+
+      const data = [trace];
+
+      Plotly.newPlot('graph-container', data, layout);
+    }
+  </script>
+
+</body>
+</html>
