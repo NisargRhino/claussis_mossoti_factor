@@ -65,95 +65,61 @@
       color: #666;
     }
 
-    /* Header Styling */
-#container h1 {
-  color: #333;
-  margin-bottom: 20px;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
 
-#container a {
-  color: #007bff;
-  text-decoration: none;
-}
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
 
-#container a:hover {
-  text-decoration: underline;
-}
+    thead {
+      background-color: #f2f2f2;
+    }
 
-/* Explanation Styling */
-#explanation {
-  margin: 20px 0;
-  color: #666;
-  text-align: center;
-}
+    tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
 
-#explanation p {
-  font-size: 18px;
-}
+    /* Button Styling */
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-#explanation h2 {
-  margin-top: 20px;
-  font-size: 24px;
-}
+    button:hover {
+      background-color: #0056b3;
+    }
 
-/* Table Styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
-}
-
-thead {
-  background-color: #f2f2f2;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* Button Styling */
-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Graph Container Styling */
-#graph-container {
-  margin-top: 20px;
-  text-align: center;
-}
+    /* Graph Container Styling */
+    #graph-container {
+      margin-top: 20px;
+      text-align: center;
+    }
   </style>
-  
 </head>
 
 <body>
-  
-
-   
   <div id="container">
     <h1 style="text-align: center;">Clausius Mossotti Factor</h1>
     <div>
-      <a href="https://nature87.godaddysites.com/">Personal Website</a> 
+      <a href="https://nature87.godaddysites.com/">Personal Website</a>
     </div>
     <div id="explanation">
       <p>
-        Enter the values for epsilon (ε)/(σ) and sigma (σ)/(ε) to calculate the Clausius-Mossotti factor for dielectrophoresis.
-        The Clausius-Mossotti factor is a key parameter in understanding the interaction between particles and electric fields.
+        Enter the values for epsilon (ε)/(σ) and sigma (σ)/(ε) to calculate the Clausius-Mossotti factor for
+        dielectrophoresis.
+        The Clausius-Mossotti factor is a key parameter in understanding the interaction between particles and electric
+        fields.
       </p>
       <h2>All particles are contained in DeIonized Water</h2>
     </div>
@@ -172,11 +138,11 @@ button:hover {
 
       <label for="sigma_m">Sigma m (σm):</label>
       <input type="text" id="sigma_m" name="sigma_m"><br><br>
- 
+
       <label for="sigma_p">Sigma p (σp):</label>
       <input type="text" id="sigma_p" name="sigma_p"><br><br>
 
-      <button onclick="calculate_cm()">Calculate</button>
+      <button onclick="calculate_cm()">Calculate</button> 
     </div>
 
     <div id="graph-container"></div>
@@ -186,15 +152,15 @@ button:hover {
       <p>The calculated Clausius-Mossotti factor represents...</p>
     </div>
     <div>
-    
       <table border="1">
         <thead>
           <tr>
-            <th>Type of cell</th>
+            <th>Type of cell</th> 
             <th>Epsilon_m</th>
             <th>Epsilon_p</th>
             <th>Sigma_m</th>
             <th>Sigma_p</th>
+            <th>Select</th> <!-- Add a new column for the "Select" button -->
           </tr>
         </thead>
         <tbody>
@@ -204,6 +170,9 @@ button:hover {
             <td>16.54</td>
             <td>5E-6</td>
             <td>0.039</td>
+            <td><button onclick="selectRow(this)">Select</button></td> 
+            
+            
           </tr>
           <tr>
             <td>Latex Beads</td>
@@ -211,6 +180,7 @@ button:hover {
             <td>2.21E-11</td>
             <td>5E-6</td>
             <td>1.2E-3</td>
+            <td><button onclick="selectRow(this)">Select</button></td>
           </tr>
           <tr>
             <td>Yeast Cells</td>
@@ -218,6 +188,7 @@ button:hover {
             <td>4.48E-10</td>
             <td>5E-6</td>
             <td>5000</td>
+            <td><button onclick="selectRow(this)">Select</button></td>
           </tr>
           <tr>
             <td>T-lymphocytes</td>
@@ -225,10 +196,12 @@ button:hover {
             <td>6.3</td>
             <td>5E-6</td>
             <td>1.2E-3</td>
+            <td><button onclick="selectRow(this)">Select</button></td>
           </tr>
         </tbody>
       </table>
     </div>
+
     <script>
       function calculate_cm() {
         let epsilon_m = new Decimal(document.getElementById("epsilon_m").value);
@@ -240,6 +213,8 @@ button:hover {
           alert("Please enter valid numerical values for epsilon and sigma.");
           return;
         }
+        
+        
 
         // Define the frequency table
         const frequency_table = [
@@ -301,13 +276,18 @@ button:hover {
 
         Plotly.newPlot('graph-container', data, layout);
       }
+
+      function selectRow(button) {
+        const row = button.parentElement.parentElement; // Get the row element
+        const cells = row.getElementsByTagName("td"); // Get all cells in the row
+        // Get values from cells and populate textboxes
+        document.getElementById("epsilon_m").value = cells[1].textContent;
+        document.getElementById("epsilon_p").value = cells[2].textContent;
+        document.getElementById("sigma_m").value = cells[3].textContent;
+        document.getElementById("sigma_p").value = cells[4].textContent;
+      }
     </script>
-
   </div>
-
-  
- 
-
 </body>
 
 </html>
